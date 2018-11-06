@@ -1,7 +1,7 @@
 {
-  "name": "@cypress/webpack-preprocessor",
+  "name": "@roundingwellos/cypress-webpack-preprocessor",
   "description": "Cypress preprocessor for bundling JavaScript via webpack",
-  "version": "0.0.0-development",
+  "version": "3.0.1",
   "author": "Chris Breiding <chris@cypress.io>",
   "bugs": "https://github.com/cypress-io/cypress-webpack-preprocessor/issues",
   "files": [
