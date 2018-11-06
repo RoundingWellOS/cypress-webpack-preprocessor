@@ -1,4 +1,3 @@
-const cloneDeep = require('lodash.clonedeep')
 const path = require('path')
 const webpack = require('webpack')
 const log = require('debug')('cypress:webpack')
@@ -6,29 +5,6 @@ const log = require('debug')('cypress:webpack')
 const createDeferred = require('./deferred')
 
 const bundles = {}
-
-// by default, we transform JavaScript (up to anything at stage-4) and JSX
-const defaultOptions = {
-  webpackOptions: {
-    module: {
-      rules: [
-        {
-          test: /\.jsx?$/,
-          exclude: [/node_modules/],
-          use: [
-            {
-              loader: require.resolve('babel-loader'),
-              options: {
-                presets: ['@babel/preset-env', '@babel/preset-react'].map(require.resolve),
-              },
-            },
-          ],
-        },
-      ],
-    },
-  },
-  watchOptions: {},
-}
 
 // export a function that returns another function, making it easy for users
 // to configure like so:
@@ -61,9 +37,7 @@ const preprocessor = (options = {}) => {
       return bundles[filePath]
     }
 
-    // user can override the default options
-    let webpackOptions = Object.assign({}, defaultOptions.webpackOptions, options.webpackOptions)
-    let watchOptions = Object.assign({}, defaultOptions.watchOptions, options.watchOptions)
+    const watchOptions = options.watchOptions
 
     // we're provided a default output path that lives alongside Cypress's
     // app data files so we don't have to worry about where to put the bundled
@@ -71,7 +45,7 @@ const preprocessor = (options = {}) => {
     const outputPath = file.outputPath
 
     // we need to set entry and output
-    webpackOptions = Object.assign(webpackOptions, {
+    const webpackOptions = Object.assign({}, options.webpackOptions, {
       entry: filePath,
       output: {
         path: path.dirname(outputPath),
@@ -172,8 +146,5 @@ const preprocessor = (options = {}) => {
     return bundles[filePath]
   }
 }
-
-// provide a clone of the default options
-preprocessor.defaultOptions = cloneDeep(defaultOptions)
 
 module.exports = preprocessor
